@@ -13,7 +13,7 @@ import {RestApplication} from '@loopback/rest';
 import {ServiceMixin} from '@loopback/service-proxy';
 import path from 'path';
 import {MySequence} from './sequence';
-
+import {JWTStrategy} from './authentication-stratgies/jwt-stratgies'
 import {BcryptHasher} from './authServices/hash.password';
 import {JWTService} from './authServices/jwt.service';
 import {MyUserService} from './authServices/user.service';
@@ -32,6 +32,9 @@ export class ApiApplication extends BootMixin(
 
     // Add security spec
     this.addSecuritySpec()
+
+    this.component(AuthenticationComponent);
+    registerAuthenticationStrategy(this, JWTStrategy)
 
     // Set up the custom sequence
     this.sequence(MySequence);
@@ -85,7 +88,9 @@ export class ApiApplication extends BootMixin(
       security: [
         {
           // secure all endpoints with 'jwt'
-          jwt: [],
+          jwt: [
+            
+          ],
         },
       ],
       servers: [{url: '/'}],

@@ -118,7 +118,6 @@ export class User extends Entity {
 
   @property({
     type: 'number',
-    required: true,
   })
   providerId: number;
 

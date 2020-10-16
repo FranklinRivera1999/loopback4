@@ -1,3 +1,5 @@
+
+import {authenticate, AuthenticationBindings} from '@loopback/authentication';
 import {
   Count,
   CountSchema,
@@ -22,6 +24,9 @@ import {loginService} from '../services/login.service';
 import {JWTService} from '../authServices/jwt.service'
 import {MyUserService} from '../authServices/user.service';
 import { TokenServiceBindings, UserServiceBindings} from '../keys';
+
+import {UserProfile} from '@loopback/security';
+import {OPERATION_SECURITY_SPEC} from '../utils/security-spect';
 
 export class ProviderController {
   constructor(
@@ -72,116 +77,26 @@ export class ProviderController {
     let userProfile = await this.userService.convertToUserProfile(userFound)
     let accessToken = await this.jwtService.generateToken(userProfile)
     return {
-      user:userProfile
+      user:userProfile,
+      accessToken
     }
 
   }
 
-  @get('/api-users', {
+  @authenticate("jwt")
+  @get('/users/me', {
+    security: OPERATION_SECURITY_SPEC,
     responses: {
       '200': {
-        description: 'Array of User model instances',
-        content: {
-          'application/json': {
-            schema: {
-              type: 'array',
-              items: getModelSchemaRef(User, {includeRelations: true}),
-            },
-          },
-        },
+        description: 'The current user profile',
       },
     },
   })
-  async find(
-    @param.filter(User) filter?: Filter<User>,
-  ): Promise<User[]> {
-    return this.userRepository.find(filter);
+  async me(
+    @inject(AuthenticationBindings.CURRENT_USER)
+    currentUser: UserProfile,
+  ): Promise<UserProfile> {
+    return Promise.resolve(currentUser);
   }
 
-  @patch('/api-users', {
-    responses: {
-      '200': {
-        description: 'User PATCH success count',
-        content: {'application/json': {schema: CountSchema}},
-      },
-    },
-  })
-  async updateAll(
-    @requestBody({
-      content: {
-        'application/json': {
-          schema: getModelSchemaRef(User, {partial: true}),
-        },
-      },
-    })
-    user: User,
-    @param.where(User) where?: Where<User>,
-  ): Promise<Count> {
-    return this.userRepository.updateAll(user, where);
-  }
-
-  @get('/api-users/{id}', {
-    responses: {
-      '200': {
-        description: 'User model instance',
-        content: {
-          'application/json': {
-            schema: getModelSchemaRef(User, {includeRelations: true}),
-          },
-        },
-      },
-    },
-  })
-  async findById(
-    @param.path.number('id') id: number,
-    @param.filter(User, {exclude: 'where'}) filter?: FilterExcludingWhere<User>
-  ): Promise<User> {
-    return this.userRepository.findById(id, filter);
-  }
-
-  @patch('/api-users/{id}', {
-    responses: {
-      '204': {
-        description: 'User PATCH success',
-      },
-    },
-  })
-  async updateById(
-    @param.path.number('id') id: number,
-    @requestBody({
-      content: {
-        'application/json': {
-          schema: getModelSchemaRef(User, {partial: true}),
-        },
-      },
-    })
-    user: User,
-  ): Promise<void> {
-    await this.userRepository.updateById(id, user);
-  }
-
-  @put('/api-users/{id}', {
-    responses: {
-      '204': {
-        description: 'User PUT success',
-      },
-    },
-  })
-  async replaceById(
-    @param.path.number('id') id: number,
-    @requestBody() user: User,
-  ): Promise<void> {
-    await this.userRepository.replaceById(id, user);
-  }
-
-  @del('/api-users/{id}', {
-    responses: {
-      '204': {
-        description: 'User DELETE success',
-      },
-    },
-  })
-  async deleteById(@param.path.number('id') id: number): Promise<void> {
-    await this.userRepository.deleteById(id);
-  }
 }
