@@ -6,11 +6,11 @@ import {Cube} from './cube.model';
 @model()
 export class Postulant extends Entity {
   @property({
-    type: 'number',
+    type: 'string',
     id: true,
     generated: true,
   })
-  id?: number;
+  id?: string;
 
   @property({
     type: 'date',
@@ -34,7 +34,7 @@ export class Postulant extends Entity {
   lastname?: string;
 
   @belongsTo(() => Country)
-  countryId: number;
+  countryId: string;
 
   @property({
     type: 'string',

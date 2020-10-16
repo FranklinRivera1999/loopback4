@@ -10,7 +10,7 @@ export class Cube extends Entity {
     id: true,
     generated: true,
   })
-  id?: number;
+  id?: string;
 
   @property({
     type: 'string',
@@ -33,13 +33,13 @@ export class Cube extends Entity {
   url?: string;
 
   @belongsTo(() => Car)
-  carId?: number;
+  carId?: string;
 
   @belongsTo(() => User)
-  driverId?: number;
+  driverId?: string;
 
   @belongsTo(() => Postulant)
-  postulantId?: number;
+  postulantId?: string;
 
   // Define well-known properties here
 

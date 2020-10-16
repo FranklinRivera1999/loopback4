@@ -53,7 +53,7 @@ export class CubeController {
       },
     },
   })
-  async deleteById(@param.path.number('id') id: number): Promise<void> {
+  async deleteById(@param.path.string('id') id: string): Promise<void> {
 
     let cube = await this.cubeRepository.findById(id)
     if (!cube) throw new HttpErrors.NotFound('Cube not Found')

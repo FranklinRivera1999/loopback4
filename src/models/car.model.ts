@@ -4,11 +4,11 @@ import {Cube} from './cube.model';
 @model()
 export class Car extends Entity {
   @property({
-    type: 'number',
+    type: 'string',
     id: true,
     generated: true,
   })
-  id?: number;
+  id?: string;
 
   @property({
     type: 'date',
@@ -56,9 +56,9 @@ export class Car extends Entity {
   driverId?: number;
 
   @property({
-    type: 'number',
+    type: 'string',
   })
-  postulantId?: number;
+  postulantId?: string;
 
   @hasMany(() => Cube)
   cubes: Cube[]

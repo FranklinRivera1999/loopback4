@@ -7,11 +7,11 @@ import {Cube} from './cube.model';
 @model()
 export class User extends Entity {
   @property({
-    type: 'number',
+    type: 'string',
     id: true,
     generated: true,
   })
-  id?: number;
+  id?: string;
 
   @property({
     type: 'string',
@@ -69,7 +69,7 @@ export class User extends Entity {
   lastname?: string;
 
   @belongsTo(() => Country)
-  countryId?: number;
+  countryId?: string;
 
   @property({
     type: 'string',

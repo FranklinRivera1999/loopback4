@@ -84,7 +84,7 @@ export class ProviderController {
   }
 
   @authenticate("jwt")
-  @get('/users/me', {
+  @get('/api/user/me', {
     security: OPERATION_SECURITY_SPEC,
     responses: {
       '200': {
